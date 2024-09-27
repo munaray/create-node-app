@@ -1,0 +1,5 @@
+src/
+tsconfig.json
+.prettierrc.json
+eslint.config.mjs
+node_modules/
