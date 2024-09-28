@@ -27,7 +27,7 @@ program
         {
           type: "input",
           name: "projectName",
-          message: `${chalk.blue("?")}Enter your project name or use press enter to use default ${chalk.dim("› my-app")}`,
+          message: `Enter your project name or use press enter to use default ${chalk.dim("›")}`,
           default: "my-app",
         },
       ]);
@@ -88,23 +88,27 @@ program
       execSync("npm init -y", { stdio: "inherit" });
       fs.writeFileSync(
         "package.json",
-        JSON.stringify({
-          name: `${projectName}`,
-          version: "1.0.0",
-          main: "server.js",
-          module: "NodeNext",
-          scripts: {
-            test: 'echo "Error: no test specified" && exit 1',
-            build: "tsc --build",
-            start: "node ./build/server.js",
-            dev: "nodemon ./src/server.ts",
-            lint: "eslint",
+        JSON.stringify(
+          {
+            name: `${projectName}`,
+            version: "1.0.0",
+            main: "server.js",
+            module: "NodeNext",
+            scripts: {
+              test: 'echo "Error: no test specified" && exit 1',
+              build: "tsc --build",
+              start: "node ./build/server.js",
+              dev: "nodemon ./src/server.ts",
+              lint: "eslint",
+            },
+            keywords: [],
+            author: "",
+            license: "ISC",
+            description: "",
           },
-          keywords: [],
-          author: "",
-          license: "ISC",
-          description: "",
-        })
+          null,
+          2
+        )
       );
 
       // Create basic project structure
@@ -127,46 +131,50 @@ program
         fs.writeFileSync(
           ".env.sample",
           `
-        PORT = 5000
-        ORIGIN = ["http://localhost:5000"]
+PORT = 5000
+ORIGIN = ["http://localhost:5000"]
 
-        NODE_DEV = development
+NODE_DEV = development
 
-        // For MongoDB database
-        MONGODB_URL =
+// For MongoDB database
+MONGODB_URL =
 
-        // For MySQL or PostgreSQL
-        DATABASE_URL =
-        DATABASE_PASSWORD =
+// For MySQL or PostgreSQL
+DATABASE_URL =
+DATABASE_PASSWORD =
 
-        // Redis for caching
-        REDIS_URL =
+// Redis for caching
+REDIS_URL =
 
-        // JWT for secure authentication
-        JWT_ACTIVATION_SECRET =
-        JWT_ACCESS_TOKEN =
-        JWT_ACCESS_TOKEN_EXPIRE =
-        JWT_REFRESH_TOKEN =
-        JWT_REFRESH_TOKEN_EXPIRE =
+// JWT for secure authentication
+JWT_ACTIVATION_SECRET =
+JWT_ACCESS_TOKEN =
+JWT_ACCESS_TOKEN_EXPIRE =
+JWT_REFRESH_TOKEN =
+JWT_REFRESH_TOKEN_EXPIRE =
 
-        // Sending mail using nodemailer
-        SMTP_HOST =
-        SMTP_PORT =
-        SMTP_SERVICES =
-        SMTP_MAIL =
-        SMTP_PASSWORD =
+// Sending mail using nodemailer
+SMTP_HOST =
+SMTP_PORT =
+SMTP_SERVICES =
+SMTP_MAIL =
+SMTP_PASSWORD =
         `
         );
         fs.writeFileSync(".gitignore", "node_modules/\n.env\nbuild/\ndist/\n");
         fs.writeFileSync(
           ".prettierrc.json",
-          JSON.stringify({
-            semi: true,
-            singleQuote: false,
-            tabWidth: 2,
-            trailingComma: "es5",
-            printWidth: 80,
-          })
+          JSON.stringify(
+            {
+              semi: true,
+              singleQuote: false,
+              tabWidth: 2,
+              trailingComma: "es5",
+              printWidth: 80,
+            },
+            null,
+            2
+          )
         );
         spinner.text = "Setting up eslint...";
         execSync("npm init @eslint/config", { stdio: "inherit" });
@@ -275,6 +283,12 @@ export class AppModule {}
             stdio: "inherit",
           }
         );
+        execSync(
+          `npm install @types/express @types/dotenv @types/cors @types/cookie-parser @types/swagger-ui-express @types/yamljs --save-dev`,
+          {
+            stdio: "inherit",
+          }
+        );
         console.log("Adding app.ts or app.js config file");
         fs.writeFileSync(
           useTypescript ? "src/app.ts" : "src/app.js",
@@ -284,7 +298,6 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import "dotenv/config";
 import { middlewareErrorHandler } from "./middleware/error";
-import routes from "./routes/index";
 
 import swaggerUi from "swagger-ui-express";
 import OPENAPI_DOCS_SPEC from "./swagger-docs/swagger";
@@ -306,7 +319,7 @@ app.use(
 
 // routes
 app.use("/api/v1", routes);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(OPENAPI_DOCS));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(OPENAPI_DOCS_SPEC));
 
 // Testing api
 app.get("/api/test", (request: Request, response: Response) => {
@@ -320,7 +333,7 @@ app.get("/api/test", (request: Request, response: Response) => {
 app.all("*", (request: Request, response: Response) => {
   response.status(404).send({
     success: false,
-    message: \${request.originalUrl} route you are trying to reach does not exist,
+    message: \`\${request.originalUrl} route you are trying to reach does not exist\`,
   });
 });
 
@@ -338,10 +351,130 @@ import connectDB from "./utils/db";
 const PORT = process.env.PORT || 3001;
 // create server
 app.listen(PORT, () => {
-  console.log(Server is connected at port \${PORT});
+  console.log(\`Server is connected at port \${PORT}\`);
   connectDB();
 });
 `
+        );
+        //
+        spinner.text = "Implementing Error Handler middleware...";
+
+        fs.writeFileSync(
+          useTypescript
+            ? "src/middleware/async-error.ts"
+            : "src/middleware/async-error.js",
+          `
+/* eslint-disable @typescript-eslint/no-unsafe-function-type */
+import { NextFunction, Request, Response } from "express";
+
+export const CatchAsyncError =
+  (asyncFunc: Function) =>
+  (request: Request, response: Response, next: NextFunction) => {
+    Promise.resolve(asyncFunc(request, response, next)).catch(next);
+  };
+ `
+        );
+
+        fs.writeFileSync(
+          useTypescript ? "src/middleware/error.ts" : "src/middleware/error.js",
+          `
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Request, Response, NextFunction } from "express-serve-static-core";
+import ErrorHandler from "../utils/errorHandler";
+
+export const middlewareErrorHandler = (
+  err: any,
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  // Set default error code and message if not set
+  err.statusCode = err.statusCode || 500;
+  err.message = err.message || "Internal server error";
+
+  // Log the error for debugging purposes
+  console.error("Error log:", err);
+
+  // Wrong MongoDB ObjectId error (CastError)
+  if (err.name === "CastError") {
+    const message = \`Resource not found. Invalid: \${err.path}\`;
+    err = new ErrorHandler(message, 400);
+  }
+
+  // Mongoose validation error
+  if (err.name === "ValidationError") {
+    const message = Object.values(err.errors)
+      .map((value: any) => value.message)
+      .join(", ");
+    err = new ErrorHandler(message, 400);
+  }
+
+  // Duplicate key error (MongoDB error)
+  if (err.code === 11000) {
+    const message = \`Duplicate field value entered: \${Object.keys(
+      err.keyValue
+    ).join(", ")}\`;
+    err = new ErrorHandler(message, 400);
+  }
+
+  // JWT authentication error
+  if (err.name === "JsonWebTokenError") {
+    const message = "Invalid token, please log in again.";
+    err = new ErrorHandler(message, 401);
+  }
+
+  // JWT expired error
+  if (err.name === "TokenExpiredError") {
+    const message = "Your token has expired, please log in again.";
+    err = new ErrorHandler(message, 401);
+  }
+
+  // Missing required parameters
+  if (err.name === "MissingRequiredParameters") {
+    const message = "Missing required parameters.";
+    err = new ErrorHandler(message, 400);
+  }
+
+  // Unauthorized access
+  if (err.name === "UnauthorizedAccess") {
+    const message = "Unauthorized access.";
+    err = new ErrorHandler(message, 401);
+  }
+
+  // Forbidden access
+  if (err.name === "ForbiddenAccess") {
+    const message = "Forbidden access.";
+    err = new ErrorHandler(message, 403);
+  }
+
+  // Send the error response
+  response.status(err.statusCode).send({
+    success: false,
+    message: err.message,
+  });
+};
+          `
+        );
+
+        fs.writeFileSync(
+          useTypescript
+            ? "scr/utils/error-handler.ts"
+            : "src/utils/error-handler.js",
+          `
+          class ErrorHandler extends Error {
+  statusCode: number;
+
+  constructor(message: any, statusCode: number) {
+    super(message);
+    this.statusCode = statusCode;
+
+    Error.captureStackTrace(this, this.constructor);
+  }
+}
+
+export default ErrorHandler;
+
+          `
         );
 
         spinner.text = "Configuring Swagger UI Documentation...";
@@ -374,7 +507,7 @@ fs.readdirSync(yamlAPIDirectory).forEach((file) => {
     try {
       yamlAPIDocuments[fileNameWithoutExtension] = YAML.load(filePath);
     } catch (error: any) {
-      console.error(Error loading \${file}, error);
+      console.error(\`Error loading \${file}\`, error);
     }
   }
 });
@@ -390,7 +523,7 @@ fs.readdirSync(yamlSchemaDirectory).forEach((file) => {
     try {
       yamlSchemaDocuments[fileNameWithoutExtension] = YAML.load(filePath);
     } catch (error: any) {
-      console.error(Error loading \${file}, error);
+      console.error(\`Error loading \${file}\`, error);
     }
   }
 });
@@ -476,7 +609,7 @@ const dbUrl: string = process.env.MONGODB_URL || "";
 const connectDB = async () => {
   try {
     await mongoose.connect(dbUrl).then((data) => {
-      console.log(Database connected to \${data.connection.host});
+      console.log(\`Database connected to \${data.connection.host}\`);
       });
   } catch (error: any) {
     console.log(error.message);
