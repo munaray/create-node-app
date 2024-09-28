@@ -18,11 +18,24 @@ program
   .version("1.0.0");
 
 program
-  .command("new <project-name>")
-  .description("create a new Node.js project")
+  .command("new [project-name]")
+  .description("Create a new Node.js project")
   .action(async (projectName) => {
-    const projectPath = path.join(process.cwd(), projectName);
+    // Prompt for project name if it's not provided
+    if (!projectName) {
+      const answer = await inquirer.prompt([
+        {
+          type: "input",
+          name: "projectName",
+          message: `${chalk.blue("?")}Enter your project name or use press enter to use default ${chalk.dim("› my-app")}`,
+          default: "my-app",
+        },
+      ]);
+      projectName = answer.projectName;
+    }
+
     let spinner;
+    const projectPath = path.join(process.cwd(), projectName);
 
     try {
       // Check if project folder already exists
