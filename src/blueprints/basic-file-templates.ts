@@ -57,6 +57,7 @@ export const createBasicFiles = (
       : JSON.stringify(
           {
             name: `${projectName}`,
+            description: "",
             version: "1.0.0",
             main: "server.js",
             type: "module",
@@ -68,7 +69,6 @@ export const createBasicFiles = (
             keywords: [],
             author: "",
             license: "ISC",
-            description: "",
           },
           null,
           2

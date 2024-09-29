@@ -1,6 +1,7 @@
 import fs from "fs";
 
 export const eslintFile = (useTypescript: boolean) => {
+  const eslint = useTypescript ? "eslint.config.mjs" : "eslint.config.js";
   const eslintContent = useTypescript
     ? `import globals from "globals";
 import pluginJs from "@eslint/js";
@@ -30,7 +31,7 @@ import pluginJs from "@eslint/js";
 
 export default [
   {
-    ignores: [".config/*", "build/*"],
+    ignores: [".config", "build", "dist"],
   },
   { files: ["**/*.{js,mjs,cjs}"] },
   { languageOptions: { globals: globals.node } },
@@ -45,5 +46,5 @@ export default [
   },
 ];`;
 
-  fs.writeFileSync("eslint.config.mjs", eslintContent);
+  fs.writeFileSync(eslint, eslintContent);
 };
