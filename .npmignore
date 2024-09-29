@@ -2,6 +2,8 @@
 .prettierrc.json
 eslint.config.mjs
 package-lock.json
+tsconfig.json
+tsup.config.ts
 
 # Git-related files
 .gitignore

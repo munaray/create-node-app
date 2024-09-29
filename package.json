@@ -1,29 +1,45 @@
 {
-  "name": "create-node-app",
+  "name": "create-node-app-cli",
+  "description": "CLI to scaffold a Node.js project with optional frameworks, databases, ORMs, TypeScript, and Swagger docs configuration",
   "version": "1.0.0",
-  "main": "index.js",
-  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "repository": {
+    "url": "https://github.com/munaray/create-node-app-cli"
+  },
   "bin": {
-    "create-node-app": "./src/index.js"
+    "create-node-app": "./dist/index.js"
   },
   "scripts": {
-    "start": "node scr/index.js"
+    "build": "tsup"
   },
-  "keywords": ["cli", "node.js", "scaffold", "project", "orm", "database", "swagger"],
+  "keywords": [
+    "cli",
+    "node.js",
+    "scaffold",
+    "project",
+    "orm",
+    "database",
+    "swagger"
+  ],
   "author": "Abdulsalam Sa'ad (munaray)",
   "license": "MIT",
-  "description": "CLI to scaffold a Node.js project with optional frameworks, databases, ORMs, TypeScript, and Swagger docs configuration",
   "dependencies": {
     "chalk": "^5.3.0",
     "commander": "^12.1.0",
     "execa": "^9.4.0",
     "inquirer": "^11.0.2",
-    "ora": "^8.1.0"
+    "ora": "^8.1.0",
+    "tsup": "^8.3.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
+    "@types/node": "^22.7.4",
     "eslint": "^9.11.1",
     "globals": "^15.9.0",
-    "prettier": "3.3.3"
+    "prettier": "3.3.3",
+    "typescript": "^5.6.2",
+    "typescript-eslint": "^8.7.0"
   }
 }

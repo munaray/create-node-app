@@ -9,6 +9,7 @@
     "pids",
     "stylelintcache",
     "tseslint",
+    "tsup",
     "vuepress",
     "wscript"
   ]

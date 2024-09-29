@@ -1,13 +1,15 @@
 import { execSync } from "child_process";
 import fs from "fs";
-import ora from "ora";
 import { appAndServerFile } from "../blueprints/express-setup-files.js";
 import { ErrorHandler } from "../utils/error-handler.js";
 import { swaggerConfig } from "../utils/swagger.js";
 import { swaggerTemplate } from "../blueprints/swagger-file-template.js";
 import chalk from "chalk";
 
-export const setupFramework = (framework, useTypescript) => {
+export const setupFramework = (
+  framework: "Express" | "Fastify" | "Nest",
+  useTypescript: boolean
+) => {
   console.log(chalk.bgBlue(`Installing ${framework} framework...`));
 
   try {
@@ -35,13 +37,13 @@ export class AppModule {}
       console.log(`${chalk.green("Setting up your express app...")}`);
 
       execSync(
-        `npm install express dotenv cors cookie-parser swagger-ui-express yamljs`,
+        "npm install express dotenv cors cookie-parser swagger-ui-express yamljs",
         {
           stdio: "ignore",
         }
       );
       execSync(
-        `npm install @types/express @types/dotenv @types/cors @types/cookie-parser @types/swagger-ui-express @types/yamljs --save-dev`,
+        "npm install @types/express @types/dotenv @types/cors @types/cookie-parser @types/swagger-ui-express @types/yamljs --save-dev",
         {
           stdio: "ignore",
         }

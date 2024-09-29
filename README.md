@@ -1,6 +1,6 @@
-# create-node-app
+# create-node-app-cli
 
-`create-node-app` is a powerful CLI tool that helps developers quickly scaffold a Node.js project with integrated database configuration, ORM setup, and optional TypeScript support. The tool also includes support for popular frameworks such as Express, Fastify, and Nest, as well as built-in Swagger documentation configuration for API development.
+`create-node-app-cli` is a powerful CLI tool that helps developers quickly scaffold a Node.js project with integrated database configuration, ORM setup, and optional TypeScript support. The tool also includes support for popular frameworks such as Express, Fastify, and Nest, as well as built-in Swagger documentation configuration for API development.
 
 ## Features
 
@@ -23,13 +23,13 @@ Make sure you have the following installed:
 
 ## Installation
 
-You can install `create-node-app` via **npx**, **yarn**, or **pnpm**:
+You can install `create-node-app-cli` via **npx**, **yarn**, or **pnpm**:
 
 ### Usage
 ```bash
-npx create-node-app@latest
-yarn create create-node-app
-pnpm dlx create-node-app@latest
+npx create-node-app-cli@latest
+yarn create create-node-app-cli
+pnpm dlx create-node-app-cli@latest
 ```
 After running the command, follow the prompts to configure your project you'll be asked to select:
 **Framework: Express, Fastify, or Nest**.
@@ -47,8 +47,10 @@ my-app/
 ├── src/
 │   ├── controllers/
 │   ├── routes/
+│   ├── mails/
 │   ├── middleware/
 │   ├── services/
+│   ├── schemas/
 │   ├── swagger-docs/
 │   │   ├── swagger-api-docs/
 │   │   └── swagger-schema-docs/

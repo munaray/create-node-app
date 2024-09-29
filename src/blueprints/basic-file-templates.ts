@@ -1,29 +1,78 @@
 import fs from "fs";
 
-export const createBasicFiles = (projectName) => {
+export const createBasicFiles = (
+  projectName: string,
+  useTypescript: boolean
+) => {
+  if (useTypescript) {
+    fs.writeFileSync(
+      "tsconfig.json",
+      JSON.stringify(
+        {
+          compilerOptions: {
+            target: "ES2020",
+            module: "commonjs",
+            strict: true,
+            esModuleInterop: true,
+            skipLibCheck: true,
+            forceConsistentCasingInFileNames: true,
+            outDir: "./build",
+            baseUrl: "./",
+            paths: {
+              "@/*": ["src/*"],
+            },
+          },
+          include: ["src/**/*.ts"],
+          exclude: ["node_modules", "build"],
+        },
+        null,
+        2
+      )
+    );
+  }
+
   fs.writeFileSync(
     "package.json",
-    JSON.stringify(
-      {
-        name: `${projectName}`,
-        version: "1.0.0",
-        main: "server.js",
-        module: "NodeNext",
-        scripts: {
-          test: 'echo "Error: no test specified" && exit 1',
-          build: "tsc --build",
-          start: "node ./build/server.js",
-          dev: "nodemon ./src/server.ts",
-          lint: "eslint",
-        },
-        keywords: [],
-        author: "",
-        license: "ISC",
-        description: "",
-      },
-      null,
-      2
-    )
+    useTypescript
+      ? JSON.stringify(
+          {
+            name: `${projectName}`,
+            version: "1.0.0",
+            main: "server.js",
+            module: "NodeNext",
+            scripts: {
+              build: "tsc --build",
+              start: "node ./build/server.js",
+              dev: "nodemon ./src/server.ts",
+              lint: "eslint",
+            },
+            keywords: [],
+            author: "",
+            license: "ISC",
+            description: "",
+          },
+          null,
+          2
+        )
+      : JSON.stringify(
+          {
+            name: `${projectName}`,
+            version: "1.0.0",
+            main: "server.js",
+            type: "module",
+            scripts: {
+              start: "node ./build/server.js",
+              dev: "nodemon ./src/server.js",
+              lint: "eslint",
+            },
+            keywords: [],
+            author: "",
+            license: "ISC",
+            description: "",
+          },
+          null,
+          2
+        )
   );
 
   fs.writeFileSync(

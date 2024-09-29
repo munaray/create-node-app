@@ -1,14 +1,15 @@
 import globals from "globals";
 import pluginJs from "@eslint/js";
-
+import tseslint from "typescript-eslint";
 
 export default [
   {
-    ignores: [".config/*", "build/*"],
+    ignores: [".config/*", "dist"],
   },
   { files: ["**/*.{js,mjs,cjs,ts}"] },
   { languageOptions: { globals: globals.node } },
   pluginJs.configs.recommended,
+  ...tseslint.configs.recommended,
   {
     rules: {
       "@typescript-eslint/no-empty-object-type": "off",

@@ -6,7 +6,10 @@ import chalk from "chalk";
 import { execSync } from "child_process";
 import { createBasicFiles } from "../blueprints/basic-file-templates.js";
 
-export const initProject = async (projectName) => {
+export const initProject = async (
+  projectName: string,
+  useTypescript: boolean
+) => {
   const spinner = ora("Creating project directory...").start();
   const projectPath = path.join(process.cwd(), projectName);
 
@@ -41,7 +44,7 @@ export const initProject = async (projectName) => {
     srcDirs.forEach((dir) => fs.mkdirSync(`src/${dir}`));
 
     // Create the basic files
-    createBasicFiles(projectName);
+    createBasicFiles(projectName, useTypescript);
     spinner.succeed("Project initialized successfully!");
   } catch (error) {
     spinner.fail("Project creation failed!");

@@ -1,6 +1,6 @@
 import fs from "fs";
 
-export const swaggerConfig = (useTypescript) => {
+export const swaggerConfig = (useTypescript: boolean) => {
   fs.writeFileSync(
     useTypescript
       ? "src/swagger-docs/swagger.ts"
@@ -70,7 +70,6 @@ const OPENAPI_DOCS_SPEC = {
 };
 
 export default OPENAPI_DOCS_SPEC;
-
-          `
+`
   );
 };

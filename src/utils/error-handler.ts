@@ -1,6 +1,6 @@
 import fs from "fs";
 
-export const ErrorHandler = (useTypescript) => {
+export const ErrorHandler = (useTypescript: boolean) => {
   fs.writeFileSync(
     useTypescript
       ? "src/middleware/async-error.ts"
