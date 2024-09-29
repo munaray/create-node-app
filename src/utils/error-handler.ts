@@ -155,7 +155,7 @@ export const middlewareErrorHandler = (
   // Mongoose validation error
   if (err.name === "ValidationError") {
     const message = Object.values(err.errors)
-      .map((value: any) => value.message)
+      .map((value) => value.message)
       .join(", ");
     err = new ErrorHandler(message, 400);
   }
