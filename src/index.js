@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 import { Command } from "commander";
 import inquirer from "inquirer";
 import chalk from "chalk";
@@ -18,7 +17,7 @@ program
   .version("1.0.0");
 
 program
-  .command("new [project-name]")
+  .command("[project-name]")
   .description("Create a new Node.js project")
   .action(async (projectName) => {
     // Prompt for project name if it's not provided
@@ -84,32 +83,9 @@ program
       fs.mkdirSync(projectPath);
       process.chdir(projectPath);
 
-      spinner.text = "Running npm init...";
-      execSync("npm init -y", { stdio: "inherit" });
-      fs.writeFileSync(
-        "package.json",
-        JSON.stringify(
-          {
-            name: `${projectName}`,
-            version: "1.0.0",
-            main: "server.js",
-            module: "NodeNext",
-            scripts: {
-              test: 'echo "Error: no test specified" && exit 1',
-              build: "tsc --build",
-              start: "node ./build/server.js",
-              dev: "nodemon ./src/server.ts",
-              lint: "eslint",
-            },
-            keywords: [],
-            author: "",
-            license: "ISC",
-            description: "",
-          },
-          null,
-          2
-        )
-      );
+      console.log(`${chalk.bgBlue("\nRunning npm init...")}`);
+      execSync("npm init -y", { stdio: "ignore" });
+      console.log("\nProject Initialized successfully");
 
       // Create basic project structure
       const srcDirs = [
@@ -128,6 +104,31 @@ program
 
       // Create basic files
       const createBasicFiles = () => {
+        fs.writeFileSync(
+          "package.json",
+          JSON.stringify(
+            {
+              name: `${projectName}`,
+              version: "1.0.0",
+              main: "server.js",
+              module: "NodeNext",
+              scripts: {
+                test: 'echo "Error: no test specified" && exit 1',
+                build: "tsc --build",
+                start: "node ./build/server.js",
+                dev: "nodemon ./src/server.ts",
+                lint: "eslint",
+              },
+              keywords: [],
+              author: "",
+              license: "ISC",
+              description: "",
+            },
+            null,
+            2
+          )
+        );
+
         fs.writeFileSync(
           ".env.sample",
           `
@@ -176,36 +177,7 @@ SMTP_PASSWORD =
             2
           )
         );
-        spinner.text = "Setting up eslint...";
-        execSync("npm init @eslint/config", { stdio: "inherit" });
-        fs.writeFileSync(
-          "eslint.config.mjs",
-          `
-import globals from "globals";
-import pluginJs from "@eslint/js";
-import tseslint from "typescript-eslint";
 
-export default [
-  {
-    ignores: [".config/*", "build/*"],
-  },
-  { files: ["**/*.{js,mjs,cjs,ts}"] },
-  { languageOptions: { globals: globals.node } },
-  pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
-  {
-    rules: {
-      "@typescript-eslint/no-empty-object-type": "off",
-      "@typescript-eslint/no-explicit-any": "off",
-      "prefer-arrow-callback": ["error"],
-      "prefer-template": ["error"],
-      semi: ["error"],
-      quotes: ["error", "double"],
-    },
-  },
-];
-`
-        );
         fs.writeFileSync(
           "README.md",
           `# ${projectName}\n\nGenerated with create-node-app CLI.\n`
@@ -219,7 +191,7 @@ export default [
         console.log("Setting up TypeScript...");
         execSync(
           "npm install typescript @types/node ts-node nodemon --save-dev",
-          { stdio: "inherit" }
+          { stdio: "ignore" }
         );
         fs.writeFileSync(
           "tsconfig.json",
@@ -251,7 +223,7 @@ export default [
           "src/index.js",
           "// Entry point\nconsole.log('Hello JavaScript!');"
         );
-        execSync("npm install nodemon --save-dev", { stdio: "inherit" });
+        execSync("npm install nodemon --save-dev", { stdio: "ignore" });
         console.log("JavaScript setup completed!");
       }
 
@@ -280,13 +252,13 @@ export class AppModule {}
         execSync(
           `npm install express dotenv cors cookie-parser swagger-ui-express yamljs`,
           {
-            stdio: "inherit",
+            stdio: "ignore",
           }
         );
         execSync(
           `npm install @types/express @types/dotenv @types/cors @types/cookie-parser @types/swagger-ui-express @types/yamljs --save-dev`,
           {
-            stdio: "inherit",
+            stdio: "ignore",
           }
         );
         console.log("Adding app.ts or app.js config file");
@@ -318,7 +290,6 @@ app.use(
 );
 
 // routes
-app.use("/api/v1", routes);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(OPENAPI_DOCS_SPEC));
 
 // Testing api
@@ -348,7 +319,7 @@ import { app } from "./app";
 import "dotenv/config";
 import connectDB from "./utils/db";
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 // create server
 app.listen(PORT, () => {
   console.log(\`Server is connected at port \${PORT}\`);
@@ -380,7 +351,7 @@ export const CatchAsyncError =
           `
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Request, Response, NextFunction } from "express-serve-static-core";
-import ErrorHandler from "../utils/errorHandler";
+import ErrorHandler from "../utils/error-handler";
 
 export const middlewareErrorHandler = (
   err: any,
@@ -457,9 +428,7 @@ export const middlewareErrorHandler = (
         );
 
         fs.writeFileSync(
-          useTypescript
-            ? "scr/utils/error-handler.ts"
-            : "src/utils/error-handler.js",
+          "src/utils/error-handler.ts",
           `
           class ErrorHandler extends Error {
   statusCode: number;
@@ -536,7 +505,7 @@ const OPENAPI_DOCS_SPEC = {
   info: {
     version: "1.0.0",
     title: "Create-Node-App CLI tools",
-    description: CLI to scaffold a Node.js project with database, ORM and swagger ui documentation setup
+    description: "CLI to scaffold a Node.js project with database, ORM and swagger ui documentation setup"
                 ,
   },
   paths: {
@@ -564,6 +533,100 @@ export default OPENAPI_DOCS_SPEC;
 # Integrate these YAML files into your swagger.ts or swagger.js file to consolidate your API documentation.
 
 # Example:
+openapi: 3.0.0
+info:
+  title: User API
+  version: 1.0.0
+  description: APIs related to Users
+
+servers:
+  - url: /api/v1
+    description: Local development server
+
+paths:
+  /register:
+    post:
+      tags:
+        - Authentication
+      summary: Register a new user
+      operationId: userRegistration
+      requestBody:
+        description: Data required to register a new user
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+                - confirmPassword
+              properties:
+                name:
+                  type: string
+                  example: "John Doe"
+                  description: "The user's full name"
+                email:
+                  type: string
+                  format: email
+                  example: "john.doe@example.com"
+                  description: "The user's email address"
+                password:
+                  type: string
+                  format: password
+                  description: "The user's password"
+                  example: "StrongPassword123!"
+                confirmPassword:
+                  type: string
+                  format: password
+                  description: "Confirm the user's password"
+                  example: "StrongPassword123!"
+      responses:
+        '201':
+          description: User successfully registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Please check your email: john.doe@example.com to activate your account"
+                  activationToken:
+                    type: string
+                    description: "The activation token sent to the user's email"
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        '400':
+          description: Bad request - Validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Passwords do not match"
+        '409':
+          description: Conflict - Email already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Email already exists"
+      security: []
 
 # // swagger.ts or swagger.js
 # const userAPI = yamlAPIDocuments["user-api"];
@@ -581,11 +644,66 @@ export default OPENAPI_DOCS_SPEC;
 # Import these YAML files into your swagger.ts or swagger.js file to consolidate your API documentation.
 
 # Example:
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - name
+        - email
+        - password
+      properties:
+        name:
+          type: string
+          description: Name of the user
+        email:
+          type: string
+          description: Email address of the user
+          format: email
+        password:
+          type: string
+          description: User's password (hashed, not returned by default)
+          format: password
+        avatar:
+          type: object
+          properties:
+            public_id:
+              type: string
+              description: Public ID of the user's avatar
+            url:
+              type: string
+              description: URL of the user's avatar
+          description: Avatar of the user
+        role:
+          type: string
+          description: Role of the user, defaults to "user"
+          example: user
+        isVerified:
+          type: boolean
+          description: Whether the user is verified
+          default: false
+        courses:
+          type: array
+          items:
+            type: object
+            properties:
+              courseId:
+                type: string
+                description: The course ID associated with the user
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the user was created
+        updatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the user was last updated
+
 
 # // swagger.ts or swagger.js
 
-const userSchema = yamlSchemaDocuments["sample-schema"];
-follow this method to integrate all your yaml files
+#const userSchema = yamlSchemaDocuments["sample-schema"];
+#follow this method to integrate all your yaml files
 `
         );
       } else {
@@ -597,7 +715,7 @@ follow this method to integrate all your yaml files
       spinner.text = `Installing ${orm} and setting up ${database}...`;
       console.log(`Installing ${orm} and setting up ${database}...`);
       if (orm === "Mongoose") {
-        execSync("npm install mongoose", { stdio: "inherit" });
+        execSync("npm install mongoose", { stdio: "ignore" });
         fs.writeFileSync(
           useTypescript ? "src/utils/db.ts" : "src/utils/db.js",
           `
@@ -625,12 +743,44 @@ export default connectDB;
         execSync("npx prisma init", { stdio: "inherit" });
       }
 
+      spinner.text = "Setting up eslint...";
+      execSync("npm init @eslint/config", { stdio: "inherit" });
+
+      fs.writeFileSync(
+        "eslint.config.mjs",
+        `
+import globals from "globals";
+import pluginJs from "@eslint/js";
+import tseslint from "typescript-eslint";
+
+export default [
+  {
+    ignores: [".config/*", "build/*"],
+  },
+  { files: ["**/*.{js,mjs,cjs,ts}"] },
+  { languageOptions: { globals: globals.node } },
+  pluginJs.configs.recommended,
+  ...tseslint.configs.recommended,
+  {
+    rules: {
+      "@typescript-eslint/no-empty-object-type": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "prefer-arrow-callback": ["error"],
+      "prefer-template": ["error"],
+      semi: ["error"],
+      quotes: ["error", "double"],
+    },
+  },
+];
+`
+      );
+
       // Initialize git and make the first commit
       spinner.text = "Initializing git repository...";
-      execSync("git init", { stdio: "inherit" });
-      execSync("git add .", { stdio: "inherit" });
+      execSync("git init", { stdio: "ignore" });
+      execSync("git add .", { stdio: "ignore" });
       execSync('git commit -m "Initial commit from Node app"', {
-        stdio: "inherit",
+        stdio: "ignore",
       });
 
       spinner.succeed(
