@@ -37,12 +37,6 @@ program
     let spinner;
 
     try {
-      if (fs.existsSync(projectName)) {
-        throw new Error(`Project name "${projectName}" already exists!`);
-      } else {
-        await initProject(projectName);
-      }
-
       const { useTypescript, framework, database, orm } = await inquirer.prompt(
         [
           {
@@ -75,6 +69,14 @@ program
           },
         ]
       );
+
+      spinner = ora("Creating node app...").start();
+
+      if (fs.existsSync(projectName)) {
+        throw new Error(`Project name "${projectName}" already exists!`);
+      } else {
+        await initProject(projectName);
+      }
 
       if (useTypescript) {
         console.log("Setting up TypeScript...");
@@ -184,7 +186,7 @@ export default [
       spinner.text = "Initializing git repository...";
       execSync("git init", { stdio: "ignore" });
       execSync("git add .", { stdio: "ignore" });
-      execSync('git commit -m "Initial commit from Node app"', {
+      execSync("git commit -m 'Initial commit from Node app'", {
         stdio: "ignore",
       });
 
@@ -196,6 +198,7 @@ export default [
       console.log(
         `3. ${chalk.green("npm run dev")} to start development server`
       );
+      spinner.stop("");
     } catch (error) {
       spinner.fail("Project creation failed!");
       console.error(error);
