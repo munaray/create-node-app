@@ -2,8 +2,9 @@
 import fs from "fs";
 import path from "path";
 import ora from "ora";
+import chalk from "chalk";
 import { execSync } from "child_process";
-import { createBasicFiles } from "../templates/basic-file-templates.js";
+import { createBasicFiles } from "../blueprints/basic-file-templates.js";
 
 export const initProject = async (projectName) => {
   const spinner = ora("Creating project directory...").start();
@@ -41,8 +42,7 @@ export const initProject = async (projectName) => {
 
     // Create the basic files
     createBasicFiles(projectName);
-
-    spinner.succeed("Project created successfully!");
+    spinner.succeed("Project initialized successfully!");
   } catch (error) {
     spinner.fail("Project creation failed!");
     console.error(error);

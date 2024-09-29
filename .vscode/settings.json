@@ -1,3 +1,15 @@
 {
-  "cSpell.words": ["execa", "Fastify", "tseslint"]
+  "cSpell.words": [
+    "execa",
+    "Fastify",
+    "jscoverage",
+    "lcov",
+    "Microbundle",
+    "Nuxt",
+    "pids",
+    "stylelintcache",
+    "tseslint",
+    "vuepress",
+    "wscript"
+  ]
 }
