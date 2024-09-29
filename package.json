@@ -2,14 +2,14 @@
   "name": "create-node-app-cli",
   "description": "CLI to scaffold a Node.js project with optional frameworks, databases, ORMs, TypeScript, and Swagger docs configuration",
   "version": "1.0.0",
-  "main": "./dist/index.js",
+  "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "repository": {
     "url": "https://github.com/munaray/create-node-app-cli"
   },
   "bin": {
-    "create-node-app": "./dist/index.js"
+    "create-node-app-cli": "./dist/index.mjs"
   },
   "scripts": {
     "build": "tsup"
