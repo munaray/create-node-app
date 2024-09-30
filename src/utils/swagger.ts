@@ -72,6 +72,11 @@ export default OPENAPI_DOCS_SPEC;`
     : `import YAML from "yamljs";
 import path from "path";
 import fs from "fs";
+import {fileURLToPath} from "url"
+
+const __filename = fileURLToPath(import.meta.url)
+
+const __dirname = path.dirname(__filename)
 
 const yamlAPIDirectory = path.join(__dirname, "swagger-api-docs");
 const yamlSchemaDirectory = path.join(__dirname, "swagger-schema-docs");

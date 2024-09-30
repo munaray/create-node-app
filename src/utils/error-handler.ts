@@ -131,7 +131,8 @@ export const middlewareErrorHandler = (
   });
 };
 `
-    : `import ErrorHandler from "../utils/error-handler";
+    : `/* eslint-disable no-unused-vars */
+import ErrorHandler from "../utils/error-handler.js";
 
 export const middlewareErrorHandler = (
   err,
