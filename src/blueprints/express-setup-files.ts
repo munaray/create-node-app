@@ -1,6 +1,9 @@
 import fs from "fs";
 
-export const appAndServerFile = (useTypescript: boolean) => {
+export const appAndServerFile = (
+  useTypescript: boolean,
+  orm: "Mongoose" | "Prisma" | "DrizzleORM"
+) => {
   const app = useTypescript ? "src/app.ts" : "src/app.js";
   const appContents = useTypescript
     ? `import express, { Request, Response } from "express";
@@ -95,9 +98,10 @@ app.use(middlewareErrorHandler);`;
 
   console.log("Adding server.ts or server.js config file");
 
-  const server = useTypescript ? "src/server.ts" : "src/server.js";
-  const serverContents = useTypescript
-    ? `import { app } from "./app";
+  if (orm === "Mongoose") {
+    const server = useTypescript ? "src/server.ts" : "src/server.js";
+    const serverContents = useTypescript
+      ? `import { app } from "./app";
 import "dotenv/config";
 import connectDB from "./utils/db";
 
@@ -107,7 +111,7 @@ app.listen(PORT, () => {
   console.log(\`Server is connected at port \${PORT}\`);
   connectDB();
 });`
-    : `import { app } from "./app.js";
+      : `import { app } from "./app.js";
 import "dotenv/config";
 import connectDB from "./utils/db.js";
 
@@ -117,5 +121,26 @@ app.listen(PORT, () => {
   console.log(\`Server is connected at port \${PORT}\`);
   connectDB();
 });`;
-  fs.writeFileSync(server, serverContents);
+    fs.writeFileSync(server, serverContents);
+  } else {
+    const server = useTypescript ? "src/server.ts" : "src/server.js";
+    const serverContents = useTypescript
+      ? `import { app } from "./app";
+import "dotenv/config";
+
+const PORT = process.env.PORT || 3000;
+// create server
+app.listen(PORT, () => {
+  console.log(\`Server is connected at port \${PORT}\`);
+});`
+      : `import { app } from "./app.js";
+import "dotenv/config";
+
+const PORT = process.env.PORT || 3000;
+// create server
+app.listen(PORT, () => {
+  console.log(\`Server is connected at port \${PORT}\`);
+});`;
+    fs.writeFileSync(server, serverContents);
+  }
 };
