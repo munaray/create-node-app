@@ -7,12 +7,13 @@ tsup.config.ts
 
 # Git-related files
 .gitignore
+.vscode/
 
 # Exclude node_modules (not necessary, npm ignores this by default)
 node_modules/
 
 # Build artifacts (if you're compiling code)
-dist/
+src/
 build/
 
 # Exclude source maps or test files (if applicable)
