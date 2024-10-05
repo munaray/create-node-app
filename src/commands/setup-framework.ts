@@ -8,7 +8,8 @@ import chalk from "chalk";
 
 export const setupFramework = (
   framework: "Express" | "Fastify" | "Nest",
-  useTypescript: boolean
+  useTypescript: boolean,
+  orm: "Mongoose" | "Prisma" | "DrizzleORM"
 ) => {
   console.log(chalk.bgBlue(`Installing ${framework} framework...`));
 
@@ -49,7 +50,7 @@ export class AppModule {}
         }
       );
       console.log("Adding app.ts or app.js config file");
-      appAndServerFile(useTypescript);
+      appAndServerFile(useTypescript, orm);
 
       ErrorHandler(useTypescript);
 

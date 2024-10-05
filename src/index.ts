@@ -93,7 +93,7 @@ program
         console.log("JavaScript setup completed!");
       }
 
-      setupFramework(framework, useTypescript);
+      setupFramework(framework, useTypescript, orm);
 
       console.log(`Installing ${orm} and setting up ${database}...`);
       if (orm === "Mongoose") {

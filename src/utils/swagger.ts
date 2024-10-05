@@ -54,9 +54,8 @@ const OPENAPI_DOCS_SPEC = {
   openapi: "3.0.0",
   info: {
     version: "1.0.0",
-    title: "Create-Node-App CLI tools",
+    title: "Create-Node-App-CLI tools",
     description: "CLI to scaffold a Node.js project with database, ORM and swagger ui documentation setup"
-                ,
   },
   paths: {
     ...sampleAPI.paths,
