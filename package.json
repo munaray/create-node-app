@@ -1,7 +1,7 @@
 {
   "name": "create-node-app-cli",
   "description": "CLI to scaffold a Node.js project with optional frameworks, databases, ORMs, TypeScript, and Swagger docs configuration",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
