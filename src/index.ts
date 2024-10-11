@@ -21,7 +21,7 @@ program
   .version("1.0.0");
 
 program
-  .command("new [project-name]")
+  .command("[project-name]")
   .description("Create a new Node.js project")
   .action(async (projectName: string) => {
     // Prompt for project name if it's not provided
@@ -31,7 +31,7 @@ program
           type: "input",
           name: "projectName",
           message: `Enter your project name or use press enter to use default ${chalk.dim("›")}`,
-          default: "my-app",
+          default: "app",
         },
       ]);
       projectName = answer.projectName;

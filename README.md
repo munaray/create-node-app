@@ -53,9 +53,14 @@ my-app/
 │   ├── schemas/
 │   ├── swagger-docs/
 │   │   ├── swagger-api-docs/
+|   |   |   ├── sample-api.yaml
 │   │   └── swagger-schema-docs/
+|   |   |   ├── sample-schema.yaml
 │   └── utils/
-│
+|   |   ├── db.ts
+|   |   ├── error-handler.ts
+│   └── app.ts
+|   └── server.ts
 ├── .env.sample
 ├── .gitignore
 ├── package.json
