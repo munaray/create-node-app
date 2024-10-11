@@ -21,7 +21,7 @@ program
   .version("1.0.0");
 
 program
-  .command("[project-name]")
+  .command("new [project-name]")
   .description("Create a new Node.js project")
   .action(async (projectName: string) => {
     // Prompt for project name if it's not provided
@@ -36,6 +36,8 @@ program
       ]);
       projectName = answer.projectName;
     }
+
+    console.log(chalk.green(`Creating project: ${projectName}`));
 
     let spinner;
 

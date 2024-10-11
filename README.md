@@ -11,6 +11,13 @@
 - **Swagger Documentation**: Automatically includes Swagger API docs setup with customizable folder structure for your APIs endpoint and Schemas.
 - **Linting and Formatting**: Integrated ESLint and Prettier setup for code quality.
 - **Environment Configuration**: Pre-configured `.env` sample file for setting up environment variables.
+- **Robust Error Handler**: Returns a structured JSON response that directly points to where the error originates.
+```
+{
+  "success": false,
+  "message": "Directly pointing to where the error is coming from"
+}
+```
 
 ## Getting Started
 
@@ -19,17 +26,15 @@
 Make sure you have the following installed:
 
 - **Node.js** (v14 or higher)
-- **npm** (or **yarn**)
+- **npm**
 
 ## Installation
 
-You can install `create-node-app-cli` via **npx**, **yarn**, or **pnpm**:
+You can install `create-node-app-cli` via **npx**:
 
 ### Usage
 ```bash
-npx create-node-app-cli@latest
-yarn create create-node-app-cli
-pnpm dlx create-node-app-cli@latest
+npx create-node-app-cli@latest new
 ```
 After running the command, follow the prompts to configure your project you'll be asked to select:
 **Framework: Express, Fastify, or Nest**.
@@ -49,6 +54,8 @@ my-app/
 │   ├── routes/
 │   ├── mails/
 │   ├── middleware/
+|   |   └── async-error.ts/
+|   |   └── error.ts/
 │   ├── services/
 │   ├── schemas/
 │   ├── swagger-docs/
